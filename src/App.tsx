@@ -235,28 +235,30 @@ function App() {
                 </div>
 
                 <div className="featured-actions">
-                  <a
-                    href={featuredProject.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-primary"
-                  >
-                    <svg
-                      className="btn-icon"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
+                  {featuredProject.liveUrl && (
+                    <a
+                      href={featuredProject.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
-                      />
-                    </svg>
-                    Launch Lab
-                  </a>
+                      <svg
+                        className="btn-icon"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                        />
+                      </svg>
+                      {featuredProject.category === 'Backend' ? 'API Endpoint' : 'Launch Lab'}
+                    </a>
+                  )}
                   {featuredProject.githubUrl && (
                     <a
                       href={featuredProject.githubUrl}
@@ -332,11 +334,22 @@ function App() {
                 d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 className="empty-title">No lab projects found</h3>
-            <p className="empty-desc">
-              No builds match the "{activeCategory}" category filter. Select another filter to view
-              other experiments.
-            </p>
+            {activeCategory === 'All' && featuredProject ? (
+              <>
+                <h3 className="empty-title">More projects coming soon</h3>
+                <p className="empty-desc">
+                  Check out the featured project above. Additional experiments will be listed here as they are registered.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="empty-title">No lab projects found</h3>
+                <p className="empty-desc">
+                  No builds match the "{activeCategory}" category filter. Select another filter to view
+                  other experiments.
+                </p>
+              </>
+            )}
           </div>
         ) : (
           <div className="project-grid">
@@ -367,28 +380,30 @@ function App() {
                     <span>Deployed: {formatDate(project.publishedAt)}</span>
                   </div>
                   <div className="project-card-actions">
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-primary"
-                    >
-                      <svg
-                        className="btn-icon"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-primary"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-                        />
-                      </svg>
-                      Launch
-                    </a>
+                        <svg
+                          className="btn-icon"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                          />
+                        </svg>
+                        {project.category === 'Backend' ? 'API Endpoint' : 'Launch'}
+                      </a>
+                    )}
                     {project.githubUrl && (
                       <a
                         href={project.githubUrl}
