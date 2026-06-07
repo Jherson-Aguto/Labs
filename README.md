@@ -28,7 +28,7 @@ Accept: application/json
     "status": "Live",
     "stack": ["Next.js", "API", "Image Processing"],
     "liveUrl": "https://labs.jhersonaguto.dev/bg-remover",
-    "githubUrl": "https://github.com/jhersonaguto/labs",
+    "githubUrl": "https://github.com/Jherson-Aguto/Labs",
     "imageUrl": null,
     "featured": true,
     "sortOrder": 1,
