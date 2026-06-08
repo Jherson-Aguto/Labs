@@ -205,7 +205,7 @@ function App() {
                   <img
                     src={featuredProject.imageUrl}
                     alt={featuredProject.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                     onError={(e) => {
                       // fallback if image fails to load
                       (e.target as HTMLElement).style.display = 'none';
@@ -268,7 +268,7 @@ function App() {
                           d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
                         />
                       </svg>
-                      {featuredProject.category === 'Backend' ? 'API Endpoint' : 'Launch Lab'}
+                      {featuredProject.category === 'Backend' ? 'Visit Website' : 'Launch Lab'}
                     </a>
                   )}
                   {featuredProject.githubUrl && (
@@ -456,7 +456,7 @@ function App() {
                             d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
                           />
                         </svg>
-                        {project.category === 'Backend' ? 'API Endpoint' : 'Launch'}
+                        {project.category === 'Backend' ? 'Visit Website' : 'Launch'}
                       </a>
                     )}
                     {project.githubUrl && (
@@ -526,6 +526,16 @@ function App() {
             <button className="modal-close-btn" onClick={() => setSelectedProject(null)} aria-label="Close modal">
               &times;
             </button>
+
+            {selectedProject.imageUrl && (
+              <div className="modal-banner" style={{ width: '100%', height: '240px', backgroundColor: 'var(--bg-soft)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                <img
+                  src={selectedProject.imageUrl}
+                  alt={selectedProject.name}
+                  style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                />
+              </div>
+            )}
             
             <div className="modal-header">
               <div className="modal-meta-row">
@@ -601,7 +611,7 @@ function App() {
                   <svg className="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                   </svg>
-                  {selectedProject.category === 'Backend' ? 'API Endpoint' : 'Launch Build'}
+                  {selectedProject.category === 'Backend' ? 'Visit Website' : 'Launch Build'}
                 </a>
               )}
               {selectedProject.githubUrl && (
