@@ -16,10 +16,27 @@ export async function getLabProjects(): Promise<LabProject[]> {
     throw new Error(`Failed to fetch lab projects: ${response.status}`);
   }
 
-  const projects: LabProject[] = await response.json();
+  const rawProjects: any[] = await response.json();
   
+  const projects: LabProject[] = rawProjects.map((proj: any) => ({
+    id: proj.id.toString(),
+    slug: proj.slug,
+    name: proj.title,
+    description: proj.shortDescription,
+    category: proj.category,
+    status: proj.status,
+    stack: proj.techStack || [],
+    liveUrl: proj.liveUrl || "",
+    githubUrl: proj.repositoryUrl || "",
+    imageUrl: proj.imageUrl || undefined,
+    featured: proj.featured || false,
+    sortOrder: proj.sortOrder ?? 0,
+    publishedAt: proj.publishedAt,
+    updatedAt: proj.updatedAt,
+    isPublished: true, // The API registry endpoint only serves published builds
+  }));
+
   return projects
-    .filter((project) => project.isPublished)
     .sort((a, b) => {
       // Primary sort: sortOrder (lower value = higher priority)
       if (a.sortOrder !== b.sortOrder) {
