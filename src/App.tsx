@@ -7,6 +7,18 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [selectedProject, setSelectedProject] = useState<LabProject | null>(null);
+
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedProject]);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -281,6 +293,33 @@ function App() {
                       GitHub Repository
                     </a>
                   )}
+                  <button
+                    onClick={() => setSelectedProject(featuredProject)}
+                    className="btn btn-secondary"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <svg
+                      className="btn-icon"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                    View Details
+                  </button>
                 </div>
               </div>
             </div>
@@ -354,7 +393,12 @@ function App() {
         ) : (
           <div className="project-grid">
             {gridProjects.map((project) => (
-              <article key={project.id} className="project-card">
+              <article
+                key={project.id}
+                className="project-card"
+                onClick={() => setSelectedProject(project)}
+                style={{ cursor: "pointer" }}
+              >
                 <div className="project-card-header">
                   <span className="category-tag">{project.category}</span>
                   <div className="status-indicator">
@@ -380,12 +424,23 @@ function App() {
                     <span>Deployed: {formatDate(project.publishedAt)}</span>
                   </div>
                   <div className="project-card-actions">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedProject(project);
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Details
+                    </button>
                     {project.liveUrl && (
                       <a
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn btn-primary"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <svg
                           className="btn-icon"
@@ -410,6 +465,7 @@ function App() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn btn-secondary"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <svg
                           className="btn-icon"
@@ -462,6 +518,122 @@ function App() {
           </a>
         </div>
       </footer>
+
+      {/* Project Details Modal */}
+      {selectedProject && (
+        <div className="modal-overlay" onClick={() => setSelectedProject(null)}>
+          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" onClick={() => setSelectedProject(null)} aria-label="Close modal">
+              &times;
+            </button>
+            
+            <div className="modal-header">
+              <div className="modal-meta-row">
+                <span className="category-tag">{selectedProject.category}</span>
+                <div className="status-indicator">
+                  <span className={getStatusDotClass(selectedProject.status)}></span>
+                  <span>{selectedProject.status}</span>
+                </div>
+              </div>
+              <h2 className="modal-title">{selectedProject.name}</h2>
+            </div>
+            
+            <div className="modal-body">
+              {/* Detailed Description */}
+              <div className="modal-section">
+                <h3 className="modal-section-title">Overview</h3>
+                <p className="modal-text">
+                  {selectedProject.detailedDescription || selectedProject.description}
+                </p>
+              </div>
+
+              {/* Problem Statement */}
+              {selectedProject.problemStatement && (
+                <div className="modal-section">
+                  <h3 className="modal-section-title">The Challenge</h3>
+                  <p className="modal-text">{selectedProject.problemStatement}</p>
+                </div>
+              )}
+
+              {/* Solution Overview */}
+              {selectedProject.solutionOverview && (
+                <div className="modal-section">
+                  <h3 className="modal-section-title">The Solution</h3>
+                  <p className="modal-text">{selectedProject.solutionOverview}</p>
+                </div>
+              )}
+
+              {/* Key Features */}
+              {selectedProject.keyFeatures && selectedProject.keyFeatures.length > 0 && (
+                <div className="modal-section">
+                  <h3 className="modal-section-title">Key Capabilities</h3>
+                  <ul className="modal-list">
+                    {selectedProject.keyFeatures.map((feature, i) => (
+                      <li key={i} className="modal-list-item">{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Tech Stack */}
+              {selectedProject.stack && selectedProject.stack.length > 0 && (
+                <div className="modal-section">
+                  <h3 className="modal-section-title">Technologies Used</h3>
+                  <div className="tech-stack-container">
+                    {selectedProject.stack.map((tech) => (
+                      <span key={tech} className="stack-tag">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="modal-footer">
+              {selectedProject.liveUrl && (
+                <a
+                  href={selectedProject.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                >
+                  <svg className="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                  </svg>
+                  {selectedProject.category === 'Backend' ? 'API Endpoint' : 'Launch Build'}
+                </a>
+              )}
+              {selectedProject.githubUrl && (
+                <a
+                  href={selectedProject.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-secondary"
+                >
+                  <svg className="btn-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.577.688.479C19.138 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+                  </svg>
+                  Source Code
+                </a>
+              )}
+              {selectedProject.demoUrl && (
+                <a
+                  href={selectedProject.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-secondary"
+                >
+                  <svg className="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Watch Demo
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

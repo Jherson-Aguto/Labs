@@ -34,6 +34,11 @@ export async function getLabProjects(): Promise<LabProject[]> {
     publishedAt: proj.publishedAt,
     updatedAt: proj.updatedAt,
     isPublished: true, // The API registry endpoint only serves published builds
+    detailedDescription: proj.detailedDescription || "",
+    problemStatement: proj.problemStatement || undefined,
+    solutionOverview: proj.solutionOverview || undefined,
+    keyFeatures: proj.keyFeatures || [],
+    demoUrl: proj.demoUrl || undefined,
   }));
 
   return projects

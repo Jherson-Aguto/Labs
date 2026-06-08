@@ -14,4 +14,9 @@ export interface LabProject {
   publishedAt: string;
   updatedAt: string;
   isPublished: boolean;
+  detailedDescription?: string;
+  problemStatement?: string;
+  solutionOverview?: string;
+  keyFeatures?: string[];
+  demoUrl?: string;
 }
